@@ -19,7 +19,10 @@ def GetFile(path):
 
         for f in files:
             file = os.path.join(root, f)
-            if file.endswith('.php') == True:
+
+            with open(file,'rb') as f:
+                file_body=f.read()
+            if file.endswith('.php') == True and b'<?php //004fb' in file_body:
                 file_dict[file] = f
                 file_list.append(file)
             else:
@@ -30,23 +33,40 @@ def GetFile(path):
 def UploadFile(file):
     print('进度：{}/{}'.format(str(a),str(b)))
     headers={
+        'Cache-Control': 'max-age=0',
+        'Origin': 'https://easytoyou.eu',
         'Upgrade-Insecure-Requests': '1',
+        'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryAc5jjAUPcH1aruyG',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_16_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
         'Sec-Fetch-User': '?1',
-        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-Site': 'same-origin',
         'Sec-Fetch-Mode': 'navigate',
+        'Referer': 'https://easytoyou.eu/decoder/ic10php71',
         'Accept-Encoding': 'gzip, deflate',
         'Accept-Language': 'zh-CN,zh;q=0.9',
-        'Cookie': '替换成你的cokie'
+        'Cookie': '替换成你自己的cookie'
 
     }
     proxy = {'http': '127.0.0.1:8080', 'https': '127.0.0.1:8080'}
 
     try:
-        filename_res = requests.get('https://easytoyou.eu/decoder/ic10php56', headers=headers,timeout=25,verify=False)
+        filename_res = requests.get('https://easytoyou.eu/decoder/ic10php71', headers=headers,timeout=25,verify=False,proxies=proxy)
         filename = re.findall(r"file\" name=\"(.+?)\"", filename_res.text)[0]
-        res = requests.post('https://easytoyou.eu/decoder/ic10php56',headers=headers ,files={filename: open(file, 'rb')},data={'submit':'Decode'},timeout=25,verify=False)
+        with open(file,'r') as f:
+            php=f.read()
+        data='''------WebKitFormBoundaryAc5jjAUPcH1aruyG
+Content-Disposition: form-data; name="{}"; filename="broadcasting.php"
+Content-Type: text/php
+
+{}
+------WebKitFormBoundaryAc5jjAUPcH1aruyG
+Content-Disposition: form-data; name="submit"
+
+Decode
+------WebKitFormBoundaryAc5jjAUPcH1aruyG
+'''.format(filename,php)
+        res = requests.post('https://easytoyou.eu/decoder/ic10php71',headers=headers,data=data,timeout=25,verify=False,proxies=proxy)
         if res.status_code == 200 and re.findall(r"Download link: <a href='", res.text) != []:
             print(file + '上传成功')
             download = re.findall(r"Download link: <a href='(.+?)'>",res.text)[0]
@@ -73,7 +93,7 @@ def UploadFile(file):
 
 
 
-AllFile=GetFile('tq/')
+AllFile=GetFile('www/')
 a=0
 b=len(AllFile)
 for file in AllFile:
