@@ -37,7 +37,7 @@ def UploadFile(file):
         'Origin': 'https://easytoyou.eu',
         'Upgrade-Insecure-Requests': '1',
         'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryAc5jjAUPcH1aruyG',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_16_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_16_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.109 Safari/537.36',
         'Sec-Fetch-User': '?1',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
         'Sec-Fetch-Site': 'same-origin',
